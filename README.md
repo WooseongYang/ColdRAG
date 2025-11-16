@@ -69,7 +69,6 @@ outputs/ColdRAG_Video_Games_core15.json
 outputs/ColdRAG_Video_Games_core15_eval.json
 ```
 
-# Citation
 If you use this implementation, please cite:
 ```bash
 @article{yang2025cold,
