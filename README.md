@@ -3,10 +3,6 @@
 ColdRAG is the **official implementation** of our Retrieval-Augmented, Large Language Model (LLM) based cold-start recommendation system.  
 This repository contains the full Qwen-based ColdRAG pipeline implemented with **vLLM** for LLM inference and **BAAI/bge-m3** for embedding-based retrieval.
 
-
-# Framework
-![ColdRAG Framework](framework.png)
-
 # Environment Setup
 
 ```bash
