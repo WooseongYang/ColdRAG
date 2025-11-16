@@ -5,7 +5,7 @@ This repository contains the full Qwen-based ColdRAG pipeline implemented with *
 
 
 # Framework
-![ColdRAG Framework](assets/framework.png)
+![ColdRAG Framework](framework.png)
 
 # Environment Setup
 
