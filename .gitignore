@@ -1,0 +1,26 @@
+# Ignore datasets
+dataset/
+rag_output_qwen/
+outputs/
+reasoning_log/
+
+# Ignore temp + OS files
+.DS_Store
+*.log
+*.csv
+*.json
+*.parquet
+
+# Environment files
+.env
+*.sh
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+
+# vllm cache/model folders
+.cache/
+.huggingface/
+models/
