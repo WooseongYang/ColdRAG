@@ -68,13 +68,3 @@ outputs/ColdRAG_Video_Games_core15.json
 ```bash
 outputs/ColdRAG_Video_Games_core15_eval.json
 ```
-
-If you use this implementation, please cite:
-```bash
-@article{yang2025cold,
-  title={Cold-Start Recommendation with Knowledge-Guided Retrieval-Augmented Generation},
-  author={Yang, Wooseong and Zhang, Weizhi and Liu, Yuqing and Han, Yuwei and Wang, Yu and Lee, Junhyun and Yu, Philip S},
-  journal={arXiv preprint arXiv:2505.20773},
-  year={2025}
-}
-```
