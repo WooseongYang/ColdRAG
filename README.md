@@ -1,6 +1,6 @@
 # ColdRAG
 
-ColdRAG is the **official implementation** of our Retrieval-Augmented, Large Language Model (LLM) based cold-start recommendation system.  
+This is the official implementation of ColdRAG, a Retrieval-Augmented, Large Language Model (LLM) based cold-start recommendation system.  
 This repository contains the full Qwen-based ColdRAG pipeline implemented with **vLLM** for LLM inference and **BAAI/bge-m3** for embedding-based retrieval.
 
 # Environment Setup
@@ -38,10 +38,9 @@ python -m vllm.entrypoints.openai.api_server \
   --tensor-parallel-size 1 \
   --download-dir "$CACHE_DIR"
 ```
-# Dataset & Knowledg Graph Setup
-Download the processed dataset and RAG index from: https://drive.google.com/drive/folders/1QkwQugctMfLlBBhHixhjpbRf4AgsX91u?usp=sharing
+# Dataset
 
-Place them like this:
+Place them like this after preprocessing:
 ```bash
 ColdRAG/
 ├── dataset/
