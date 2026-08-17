@@ -10,12 +10,16 @@ conda create -n coldrag python=3.10 -y
 conda activate coldrag
 pip install -r requirements.txt
 ```
-# Starting vLLM Servers
+# Starting the vLLM Server
 
-ColdRAG requires two vLLM servers:
+ColdRAG only needs a single vLLM server, for the reasoning LLM. Embeddings
+(`BAAI/bge-m3` by default in the paper's setup) are loaded locally via
+`transformers` in the same process, not served over HTTP.
+
 ## Qwen LLM Server
 ```bash
-export VLLM_QWEN_URL=http://localhost:8000/v1
+export VLLM_SERVER_URL=http://localhost:8000/v1/chat/completions
+export VLLM_MODEL=Qwen/Qwen2.5-7B-Instruct
 export VLLM_MAX_MODEL_LEN=131072
 
 python -m vllm.entrypoints.openai.api_server \
@@ -27,16 +31,13 @@ python -m vllm.entrypoints.openai.api_server \
   --rope-scaling '{"type":"yarn","factor":4.0,"original_max_position_embeddings":32768}' \
   --download-dir "$CACHE_DIR"
 ```
-## Embedding Server
-```bash
-export VLLM_EMBED_URL=http://localhost:8001/v1
 
-python -m vllm.entrypoints.openai.api_server \
-  --model BAAI/bge-m3 \
-  --port 8001 \
-  --gpu-memory-utilization 0.1 \
-  --tensor-parallel-size 1 \
-  --download-dir "$CACHE_DIR"
+## Embedding Model
+No server needed. `EMBED_MODEL` selects the local HuggingFace embedding model
+(code default is `BAAI/bge-large-en-v1.5`); set it to `BAAI/bge-m3` to match
+the paper's setup:
+```bash
+export EMBED_MODEL=BAAI/bge-m3
 ```
 # Dataset
 
@@ -54,8 +55,10 @@ ColdRAG/
 
 # Running ColdRAG
 ```bash
-python main.py --model ColdRAG_qwen --dataset Video_Games --core 15 --cand_size 100 --k 10 --batch_size 5
+python main.py --model ColdRAG_qwen --dataset Video_Games --core 15 --cand_size 100 --k 10 --batch_size 5 \
+  --out outputs/ColdRAG_Video_Games_core15.json
 ```
+`--out` defaults to `./outputs/preds.json` if omitted.
 
 # Output Files
 After running ColdRAG, two output files are generated:
@@ -67,3 +70,10 @@ outputs/ColdRAG_Video_Games_core15.json
 ```bash
 outputs/ColdRAG_Video_Games_core15_eval.json
 ```
+
+# Acknowledgements
+ColdRAG's indexing and retrieval engine (the `coldrag/` package) is adapted
+from [LightRAG](https://github.com/HKUDS/LightRAG) (HKUDS, MIT License; see
+[`coldrag/LICENSE`](coldrag/LICENSE)). We build on it by replacing its
+similarity-based retrieval with LLM-guided, query-adaptive multi-hop
+traversal for item cold-start recommendation.
