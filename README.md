@@ -1,7 +1,7 @@
 # ColdRAG
 
 This is the official implementation of ColdRAG, a Retrieval-Augmented, Large Language Model (LLM) based cold-start recommendation system.  
-This repository contains the full Qwen-based ColdRAG pipeline implemented with **vLLM** for LLM inference and **BAAI/bge-m3** for embedding-based retrieval.
+This repository contains the full Qwen-based ColdRAG pipeline implemented with **vLLM** for LLM inference and **BAAI/bge-large-en-v1.5** for embedding-based retrieval.
 
 # Environment Setup
 
@@ -13,8 +13,8 @@ pip install -r requirements.txt
 # Starting the vLLM Server
 
 ColdRAG only needs a single vLLM server, for the reasoning LLM. Embeddings
-(`BAAI/bge-m3` by default in the paper's setup) are loaded locally via
-`transformers` in the same process, not served over HTTP.
+are loaded locally via `transformers` in the same process, not served over
+HTTP.
 
 ## Qwen LLM Server
 ```bash
@@ -31,14 +31,21 @@ python -m vllm.entrypoints.openai.api_server \
   --rope-scaling '{"type":"yarn","factor":4.0,"original_max_position_embeddings":32768}' \
   --download-dir "$CACHE_DIR"
 ```
+`outlines==0.0.46` (vLLM's default guided-decoding backend) depends on a
+`pyairports` package that is broken on PyPI (installs but has no importable
+module), which makes every chat completion request fail with a 500 error.
+If you hit `ModuleNotFoundError: No module named 'pyairports'` in the vLLM
+server log, add `--guided-decoding-backend lm-format-enforcer` to the
+command above to avoid that code path.
 
 ## Embedding Model
 No server needed. `EMBED_MODEL` selects the local HuggingFace embedding model
-(code default is `BAAI/bge-large-en-v1.5`); set it to `BAAI/bge-m3` to match
-the paper's setup:
-```bash
-export EMBED_MODEL=BAAI/bge-m3
-```
+and defaults to `BAAI/bge-large-en-v1.5`. **Leave this unset if you're using
+the pre-built `rag_output_qwen/` index below** — the vector store was built
+with the default model, and querying it with a different embedding model
+silently breaks retrieval (entity/candidate matching returns 0 results with
+no error). Only set `EMBED_MODEL` if you are also rebuilding the index from
+scratch with that same model.
 # Dataset
 
 Place them like this after preprocessing:
